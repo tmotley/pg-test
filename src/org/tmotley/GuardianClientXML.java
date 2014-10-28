@@ -10,6 +10,7 @@ import org.apache.http.util.EntityUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
 
 import java.io.StringReader;
 import java.net.URI;
@@ -48,9 +49,11 @@ public class GuardianClientXML {
         Document doc = sax.build(new StringReader(content));
 
         Element root = doc.getRootElement().getChild("results");
+        XMLOutputter xout = new XMLOutputter();
         for (Object e : root.getChildren("result")) {
             Element elem = (Element) e;
             System.out.println("Next child " + elem.getAttribute("web-title"));
+            xout.output(elem, System.out);
         }
        /* for (Map i: results) {
             System.out.println("Next Result " + i.get("id"));
