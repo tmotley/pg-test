@@ -55,6 +55,31 @@ public class GuardianClient {
         Scanner scanner = new Scanner(System.in);
         String choice = scanner.nextLine();
         System.out.println(choice);
+        uri = new URIBuilder()
+                .setScheme("http")
+                .setHost("content.guardianapis.com")
+                .setPath("/" + choice)
+                .setParameter("api-key", apiKey)
+                .setParameter("format", "json")
+                /*.setParameter("btnG", "Google Search")
+                .setParameter("aq", "f")
+                .setParameter("oq", "")*/
+                .build();
+        System.out.println("URI is : " + uri.toString());
+        get = new HttpGet(uri);
+        httpclient = HttpClients.createDefault();
+        resp = httpclient.execute(get);
+        entity = resp.getEntity();
+       /* ContentType contentType = ContentType.getOrDefault(resp.getEntity());
+        Charset charset = contentType.getCharset();*/
+        content = EntityUtils.toString(entity);
+        System.out.println("Response is : " + content);
+        json = mapper.readValue(content, LinkedHashMap.class);
+        //printAndStripHeaders(json);
+        results = (ArrayList)((Map)json.get("response")).get("results");
+        for (Map i: results) {
+            System.out.println("Next Result " + i.get("id"));
+        }
     }
 
     static Map printAndStripHeaders(LinkedHashMap<String,Object> json) {
